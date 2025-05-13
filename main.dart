@@ -1,3 +1,4 @@
+//external coding refrences
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//these are methods, functions and properties.
+//the usage of 'extends' allows the results to be shared across the program.
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
 
@@ -35,8 +38,20 @@ class MyAppState extends ChangeNotifier {
     current = WordPair.random();
     notifyListeners();
   }
+
+  var favorites = <WordPair>[]; //adding list features
+//lists are expressed with [], sets are {}
+  void toggleFavorite() {
+    if (favorites.contains(current)) {
+      favorites.remove(current);
+    } else {
+      favorites.add(current);
+    }
+    notifyListeners();
+  }
 }
 
+//the folowing is what is being displayed
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -44,20 +59,37 @@ class MyHomePage extends StatelessWidget {
     var pair = appState.current;
 
     return Scaffold(
+      //scaffold, just situates the folow content from top to bottom in sequence
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('A random confusing idea:'),
-            result(pair: pair),
+            result(
+                pair:
+                    pair), //result is a specificaly designated text element, defined by refactoring.
+            //right click the "Text" keyword, above, select Refactor and you will see what I mean
             SizedBox(height: 10),
 
-            //adding a button
-            ElevatedButton(
-              onPressed: () {
-                appState.getNext();
-              },
-              child: Text('Next'),
+            //adding a button, now i have put the Elevated button in a row, its kindof like a family tree.
+            //Row is like a parent, and it has children, the 'Next' and 'like' buttons would be the children/child
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    appState.toggleFavorite();
+                  },
+                  child: Text('<3 Like'),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    appState.getNext(); //plainly this is what it says
+                  },
+                  child: Text('Next'), //This is its visible text)
+                ),
+              ],
             ),
           ],
         ),
@@ -66,6 +98,7 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
+//the refactored "Text" turned "result" becomes its own function allowing further refinement
 class result extends StatelessWidget {
   const result({
     super.key,
@@ -73,10 +106,11 @@ class result extends StatelessWidget {
   });
 
   final WordPair pair;
-
+//think of build() a bit like CSS in html.
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme =
+        Theme.of(context); //final is like a const, but slightly flexible.
     final style = theme.textTheme.displayMedium!.copyWith(
       color: theme.colorScheme.onPrimary,
     );
